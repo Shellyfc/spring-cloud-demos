@@ -75,7 +75,7 @@ spec:
           imagePullPolicy: IfNotPresent #Always
           env:
             - name: EUREKA_URL
-            - value: http://eureka-server:8761/eureka/
+              value: http://eureka-server:8761/eureka/
           ports:
             - containerPort: 8080
           resources:
@@ -119,7 +119,7 @@ spec:
           imagePullPolicy: IfNotPresent #Always
           env:
             - name: EUREKA_URL
-            - value: http://eureka-server:8761/eureka/
+              value: http://eureka-server:8761/eureka/
           ports:
             - containerPort: 8080
           resources:
