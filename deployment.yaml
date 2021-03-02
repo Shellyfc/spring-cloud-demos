@@ -6,8 +6,10 @@ metadata:
   labels:
     app: eureka-server
 spec:
+  type: NodePort
   ports:
     - port: 8761
+      targetPort: 8761
       name: http
   selector:
     app: eureka-server
@@ -30,7 +32,7 @@ spec:
     spec:
       containers:
         - name: eureka-server
-          image:
+          image: chess-qa.cargo.io/cftest/eureka-server:latest
           imagePullPolicy: IfNotPresent #Always
           ports:
             - containerPort: 8761
@@ -38,6 +40,9 @@ spec:
             limits:
               cpu: "2"
               memory: 4Gi
+            requests:
+              cpu: 200m
+              memory: 200Mi
 ---
 # eureka server client
 apiVersion: v1
@@ -71,7 +76,7 @@ spec:
     spec:
       containers:
         - name: eureka-server-client
-          image:
+          image: chess-qa.cargo.io/cftest/eureka-server-client:latest
           imagePullPolicy: IfNotPresent #Always
           env:
             - name: EUREKA_URL
@@ -82,6 +87,60 @@ spec:
             limits:
               cpu: "2"
               memory: 4Gi
+            requests:
+              cpu: 200m
+              memory: 200Mi
+---
+# eureka server client
+apiVersion: v1
+kind: Service
+metadata:
+  name: eureka-server-client-svc
+  labels:
+    app: eureka-server-client-svc
+spec:
+  ports:
+    - port: 8080
+      name: http
+  selector:
+    app: eureka-server-client-svc
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: eureka-server-client-svc
+  labels:
+    app: eureka-server-client-svc
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: eureka-server-client-svc
+  template:
+    metadata:
+      labels:
+        app: eureka-server-client-svc
+    spec:
+      containers:
+        - name: eureka-server-client-svc
+          image: chess-qa.cargo.io/cftest/eureka-server-client-svc:latest
+          imagePullPolicy: IfNotPresent #Always
+          env:
+            - name: JAVA_OPTS
+              value: -Deureka.instance.preferIpAddress=false -Deureka.instance.hostname=eureka-server-client-svc.cftest.svc.cluster.local
+#            - name: APP_SERVICE
+#              value: eureka-server-client-svc.cftest.svc.cluster.local
+            - name: EUREKA_URL
+              value: http://eureka-server:8761/eureka/
+          ports:
+            - containerPort: 8080
+          resources:
+            limits:
+              cpu: "2"
+              memory: 4Gi
+            requests:
+              cpu: 200m
+              memory: 200Mi
 ---
 # eureka server client feign
 apiVersion: v1
@@ -115,9 +174,11 @@ spec:
     spec:
       containers:
         - name: eureka-server-feign-client
-          image:
+          image: chess-qa.cargo.io/cftest/eureka-server-feign-client:latest
           imagePullPolicy: IfNotPresent #Always
           env:
+            - name: JAVA_OPTS
+              value: -Deureka.instance.preferIpAddress=false -Deureka.instance.hostname=eureka-server-feign-client.cftest.svc.cluster.local
             - name: EUREKA_URL
               value: http://eureka-server:8761/eureka/
           ports:
@@ -126,6 +187,9 @@ spec:
             limits:
               cpu: "2"
               memory: 4Gi
+            requests:
+              cpu: 200m
+              memory: 200Mi
 ---
 # echo web
 apiVersion: apps/v1
@@ -144,7 +208,7 @@ spec:
     spec:
       containers:
         - name: echo-web
-          image: ealen/echo-server
+          image: chess-qa.cargo.io/release/echo-server:1.0.0
           ports:
             - containerPort: 80
           resources:
@@ -185,7 +249,7 @@ spec:
     spec:
       containers:
         - name: netshoot
-          image: nicolaka/netshoot
+          image: chess-qa.cargo.io/release/netshoot:1.0.0
           imagePullPolicy: IfNotPresent #Always
           command: [ "/bin/bash", "-c", "--" ]
           args: [ "while true; do sleep 30; done;" ]

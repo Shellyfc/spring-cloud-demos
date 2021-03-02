@@ -10,5 +10,8 @@ build:
 run: build
 	docker-compose up --build
 
+push: run
+	sh push.sh
+
 cache-run:
 	docker-compose up

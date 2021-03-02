@@ -1,0 +1,4 @@
+org/example/client/EurekaClientApplication.class
+org/example/client/controller/HelloController.class
+org/example/client/controller/CallController.class
+org/example/client/configuration/RestTemplateConfiguration.class

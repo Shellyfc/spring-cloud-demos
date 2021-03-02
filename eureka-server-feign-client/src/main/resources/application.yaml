@@ -3,7 +3,8 @@ spring:
     name: eureka-service-feign-client
 eureka:
   instance:
-    preferIpAddress: true
+    instance-id: ${spring.application.name}:${server.port:8080}
+    hostname: ${APP_SERVICE:localhost} # 主机名方式注册,修改为对应的 SRV 的 FQDN 地址
   client:
     service-url:
       defaultZone: ${EUREKA_URL:http://localhost:8761/eureka/}

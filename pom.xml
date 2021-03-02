@@ -12,7 +12,7 @@
         <module>eureka-server</module>
         <module>eureka-server-client</module>
         <module>eureka-server-feign-client</module>
-        <module>eureka-server-client-ip</module>
+        <module>eureka-server-client-svc</module>
     </modules>
 
     <parent>

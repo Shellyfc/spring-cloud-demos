@@ -12,16 +12,16 @@ services:
       EUREKA_URL: http://eureka-server:8761/eureka/
     ports:
       - 8081:8080
-  eureka-server-fegin-client:
+  eureka-server-feign-client:
     build: ./eureka-server-feign-client
-    container_name: eureka-server-fegin-client
+    container_name: eureka-server-feign-client
     environment:
       EUREKA_URL: http://eureka-server:8761/eureka/
     ports:
       - 8082:8080
-  eureka-server-client-ip:
-    build: ./eureka-server-client-ip
-    container_name: eureka-server-client-ip
+  eureka-server-client-svc:
+    build: ./eureka-server-client-svc
+    container_name: eureka-server-client-svc
     environment:
       EUREKA_URL: http://eureka-server:8761/eureka/
     ports:

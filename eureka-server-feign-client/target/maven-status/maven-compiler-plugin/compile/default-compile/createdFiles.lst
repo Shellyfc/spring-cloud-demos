@@ -1,0 +1,4 @@
+org/example/feign/client/EurekaFeignClientApplication.class
+org/example/feign/client/controller/HelloController.class
+org/example/feign/client/controller/CallController.class
+org/example/feign/client/client/EurekaClientClient.class
